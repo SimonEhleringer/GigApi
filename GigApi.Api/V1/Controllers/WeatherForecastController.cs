@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GigApi.Api.Controllers
+namespace GigApi.Api.V1.Controllers
 {
     [ApiController]
     [Route("[controller]")]

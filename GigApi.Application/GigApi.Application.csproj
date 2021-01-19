@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GigApi.Domain\GigApi.Domain.csproj" />
+    <ProjectReference Include="..\GigApi.Persistence\GigApi.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>
