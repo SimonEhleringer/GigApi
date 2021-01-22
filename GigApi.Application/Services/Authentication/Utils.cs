@@ -1,4 +1,5 @@
-﻿using GigApi.Domain.Entities;
+﻿using GigApi.Application.Interfaces;
+using GigApi.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GigApi.Application.Authentication
+namespace GigApi.Application.Services.Authentication
 {
     public static class Utils
     {

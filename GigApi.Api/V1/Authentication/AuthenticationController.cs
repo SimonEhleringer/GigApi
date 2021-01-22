@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GigApi.Application.Services.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GigApi.Application.Authentication;
 
 namespace GigApi.Api.V1.Authentication
 {

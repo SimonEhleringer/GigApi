@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace GigApi.Domain.Entities
+namespace GigApi.Api.V1.Songs
 {
-    public class Song
+    public class SongResponse
     {
         public Guid SongId { get; set; }
 
@@ -15,7 +14,5 @@ namespace GigApi.Domain.Entities
         public string Interpreter { get; set; }
 
         public int Tempo { get; set; }
-
-        public IList<PlaylistSong> PlaylistSongs { get; set; }
     }
 }

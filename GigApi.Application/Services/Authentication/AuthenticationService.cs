@@ -1,15 +1,14 @@
 ﻿using GigApi.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using GigApi.Application.Interfaces;
 
-namespace GigApi.Application.Authentication
+namespace GigApi.Application.Services.Authentication
 {
     public class AuthenticationService
     {

@@ -5,8 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GigApi.Domain\GigApi.Domain.csproj" />
-    <ProjectReference Include="..\GigApi.Persistence\GigApi.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

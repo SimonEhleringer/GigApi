@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GigApi.Application.Playlist
+namespace GigApi.Application.Interfaces
 {
-    public class PlaylistService
+    public interface IJwtSettings
     {
-       
+        public string Secret { get; set; }
     }
 }

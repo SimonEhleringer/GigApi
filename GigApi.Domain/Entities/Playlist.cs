@@ -13,6 +13,6 @@ namespace GigApi.Domain.Entities
 
         public string Name { get; set; }
 
-        public IList<Song> Songs { get; set; }
+        public IList<PlaylistSong> PlaylistSongs { get; set; }
     }
 }

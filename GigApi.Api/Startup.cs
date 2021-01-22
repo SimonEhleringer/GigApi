@@ -19,8 +19,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using GigApi.Api.Settings;
-using GigApi.Application.Authentication;
 using GigApi.Application;
+using GigApi.Application.Interfaces;
+using GigApi.Application.Services.Authentication;
+using AutoMapper;
+using GigApi.Application.Services.Songs;
 
 namespace GigApi.Api
 {
@@ -43,12 +46,17 @@ namespace GigApi.Api
             Configuration.Bind(nameof(jwtSettings), jwtSettings);
 
             services.AddScoped<AuthenticationService>();
+            services.AddScoped<SongService>();
 
             services.AddSingleton<IJwtSettings>(jwtSettings);
             //services.AddSingleton(jwtSettings);
 
             services.AddDbContext<GigDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("GigDb")));
+
+            services.AddScoped<IGigDbContext>(provider => provider.GetService<GigDbContext>());
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddIdentity<GigUser, IdentityRole>()
                 .AddEntityFrameworkStores<GigDbContext>()

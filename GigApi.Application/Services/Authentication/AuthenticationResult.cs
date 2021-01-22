@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GigApi.Application.Authentication
+namespace GigApi.Application.Services.Authentication
 {
     public class AuthenticationResult
     {
