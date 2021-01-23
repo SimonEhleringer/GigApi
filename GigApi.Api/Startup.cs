@@ -24,7 +24,6 @@ using GigApi.Application.Interfaces;
 using GigApi.Application.Services.Authentication;
 using AutoMapper;
 using GigApi.Application.Services.Songs;
-using FluentValidation.AspNetCore;
 using GigApi.Api.Filters;
 
 namespace GigApi.Api
@@ -53,10 +52,7 @@ namespace GigApi.Api
 
                     // Add filter for exception handling
                     options.Filters.Add<ExceptionHandlingFilter>();
-                })
-                // Use FluentValidation instead of DataAnnotations for validation
-                .AddFluentValidation(x => 
-                    x.RegisterValidatorsFromAssemblyContaining<Startup>());
+                });
 
             // Settings mapping and registration
             var jwtSettings = new JwtSettings();

@@ -24,17 +24,18 @@ namespace GigApi.Api.V1.Authentication
         {
             var authResponse = await _authenticationService.RegisterAsync(request.Username, request.Email, request.Password);
 
-            var response = new RegisterLoginResponse
-            {
-                Succeeded = authResponse.Succeeded,
-                JwtToken = authResponse.JwtToken,
-                Errors = authResponse.Errors
-            };
-
             if (!authResponse.Succeeded)
             {
-                return BadRequest(response);
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = authResponse.Errors
+                });
             }
+
+            var response = new RegisterLoginResponse
+            {
+                JwtToken = authResponse.JwtToken
+            };
 
             return Ok(response);
         }
@@ -44,17 +45,19 @@ namespace GigApi.Api.V1.Authentication
         {
             var authResponse = await _authenticationService.LoginAsync(request.Email, request.Password);
 
-            var response = new RegisterLoginResponse
-            {
-                Succeeded = authResponse.Succeeded,
-                JwtToken = authResponse.JwtToken,
-                Errors = authResponse.Errors
-            };
 
             if (!authResponse.Succeeded)
             {
-                return BadRequest(response);
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = authResponse.Errors
+                });
             }
+
+            var response = new RegisterLoginResponse
+            {
+                JwtToken = authResponse.JwtToken
+            };
 
             return Ok(response);
         }
