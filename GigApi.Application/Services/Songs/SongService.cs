@@ -1,4 +1,5 @@
-﻿using GigApi.Application.Interfaces;
+﻿using GigApi.Application.Exceptions;
+using GigApi.Application.Interfaces;
 using GigApi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,25 +20,36 @@ namespace GigApi.Application.Services.Songs
             _context = context;
         }
 
-        public async Task<IList<Song>> GetAllAsync()
+        public async Task<IList<Song>> GetAllAsync(Guid loggedInUserId)
         {
-            return await _context.Songs.ToListAsync();
+            return await _context.Songs
+                .Where(x => x.UserId == loggedInUserId)
+                .ToListAsync();
         }
 
-        public async Task<Song> GetByIdAsync(Guid songId)
+        public async Task<Song> GetByIdAsync(Guid songId, Guid loggedInUserId)
         {
-            return await _context.Songs.SingleOrDefaultAsync(s => s.SongId == songId);
+            var song = await _context.Songs.SingleOrDefaultAsync(s => s.SongId == songId);
+
+            if (song.UserId != loggedInUserId)
+            {
+                throw new UserHasNoPermissionException();
+            }
+
+            return song;
         }
 
-        public async Task<Song> CreateAsync(Song songToCreate)
+        public async Task<Song> CreateAsync(Song songToCreate, Guid loggedInUserId)
         {
+            songToCreate.UserId = loggedInUserId;
+
             var createdSong = await _context.Songs.AddAsync(songToCreate);
             await _context.SaveChangesAsync();
 
             return createdSong.Entity;
         }
 
-        public async Task<Song> UpdateAsync(Song songToUpdate)
+        public async Task<Song> UpdateAsync(Song songToUpdate, Guid loggedInUserId)
         {
             var songToBeUpdated = await Utils.GetByIdWithoutTrackingAsync(_context, songToUpdate.SongId);
 
@@ -46,19 +58,33 @@ namespace GigApi.Application.Services.Songs
                 return null;
             }
 
-            var updatedSong = _context.Songs.Update(songToUpdate);
+            if (songToBeUpdated.UserId != loggedInUserId)
+            {
+                throw new UserHasNoPermissionException();
+            }
+
+            songToBeUpdated.Title = songToUpdate.Title;
+            songToBeUpdated.Interpreter = songToUpdate.Interpreter;
+            songToBeUpdated.Tempo = songToUpdate.Tempo;
+
+            var updatedSong = _context.Songs.Update(songToBeUpdated);
             await _context.SaveChangesAsync();
 
             return updatedSong.Entity;
         }
 
-        public async Task<bool> DeleteAsync(Guid songId)
+        public async Task<bool> DeleteAsync(Guid songId, Guid loggedInUserId)
         {
             var songToDelete = await Utils.GetByIdWithoutTrackingAsync(_context, songId);
 
             if (songToDelete == null)
             {
                 return false;
+            }
+
+            if (songToDelete.UserId != loggedInUserId)
+            {
+                throw new UserHasNoPermissionException();
             }
 
             _context.Songs.Remove(songToDelete);

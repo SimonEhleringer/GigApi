@@ -17,5 +17,7 @@ namespace GigApi.Domain.Entities
         public int Tempo { get; set; }
 
         public IList<PlaylistSong> PlaylistSongs { get; set; }
+
+        public Guid UserId { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace GigApi.Api.V1.Songs
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize] //(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)
     public class SongsController : ControllerBase
     {
         private readonly SongService _service;
@@ -29,7 +29,7 @@ namespace GigApi.Api.V1.Songs
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var songs = await _service.GetAllAsync();
+            var songs = await _service.GetAllAsync(HttpContext.GetUserId());
 
             var responses = _mapper.Map<List<SongResponse>>(songs);
 
@@ -39,7 +39,7 @@ namespace GigApi.Api.V1.Songs
         [HttpGet("{songId}")]
         public async Task<IActionResult> Get([FromRoute] Guid songId)
         {
-            var song = await _service.GetByIdAsync(songId);
+            var song = await _service.GetByIdAsync(songId, HttpContext.GetUserId());
             
             if (song == null)
             {
@@ -58,7 +58,7 @@ namespace GigApi.Api.V1.Songs
 
             var songToCreate = _mapper.Map<Song>(request);
 
-            var createdSong = await _service.CreateAsync(songToCreate);
+            var createdSong = await _service.CreateAsync(songToCreate, HttpContext.GetUserId());
 
             var response = _mapper.Map<SongResponse>(createdSong);
 
@@ -71,7 +71,7 @@ namespace GigApi.Api.V1.Songs
             var songToUpdate = _mapper.Map<Song>(request);
             songToUpdate.SongId = songId;
 
-            var updatedSong = await _service.UpdateAsync(songToUpdate);
+            var updatedSong = await _service.UpdateAsync(songToUpdate, HttpContext.GetUserId());
 
             if (updatedSong == null)
             {
@@ -86,7 +86,7 @@ namespace GigApi.Api.V1.Songs
         [HttpDelete("{songId}")]
         public async Task<IActionResult> Delete([FromRoute] Guid songId)
         {
-            var isDeleted = await _service.DeleteAsync(songId);
+            var isDeleted = await _service.DeleteAsync(songId, HttpContext.GetUserId());
 
             if (!isDeleted)
             {
