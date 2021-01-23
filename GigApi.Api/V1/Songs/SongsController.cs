@@ -54,15 +54,13 @@ namespace GigApi.Api.V1.Songs
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUpdateSongRequest request)
         {
-            // TODO: Fertig machen!
-
             var songToCreate = _mapper.Map<Song>(request);
 
             var createdSong = await _service.CreateAsync(songToCreate, HttpContext.GetUserId());
 
             var response = _mapper.Map<SongResponse>(createdSong);
 
-            return Created("", response);
+            return Created(HttpContext.GetLocationHeader(Url, response.SongId), response);
         }
 
         [HttpPut("{songId}")]
