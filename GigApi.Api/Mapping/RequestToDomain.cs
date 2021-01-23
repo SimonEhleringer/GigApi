@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace GigApi.Api.Mapping
 {
-    public class ResponseToDomain : Profile
+    public class RequestToDomain : Profile
     {
-        public ResponseToDomain()
+        public RequestToDomain()
         {
             CreateMap<CreateUpdateSongRequest, Song>();
         }
