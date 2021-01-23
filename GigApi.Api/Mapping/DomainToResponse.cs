@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using GigApi.Api.V1;
+using GigApi.Api.V1.Authentication;
 using GigApi.Api.V1.Songs;
+using GigApi.Application.Services.Authentication;
 using GigApi.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,6 +16,10 @@ namespace GigApi.Api.Mapping
         public DomainToResponse()
         {
             CreateMap<Song, SongResponse>();
+
+            CreateMap<AuthenticationResult, AuthenticationResponse>();
+
+            CreateMap<AuthenticationResult, ErrorResponse>();
         }
     }
 }

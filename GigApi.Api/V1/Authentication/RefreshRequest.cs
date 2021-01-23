@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace GigApi.Api.V1.Authentication
 {
-    public class RegisterLoginResponse
+    public class RefreshRequest
     {
         public string JwtToken { get; set; }
+
+        public string RefreshToken { get; set; }
     }
 }

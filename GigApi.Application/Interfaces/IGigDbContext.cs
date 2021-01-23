@@ -17,6 +17,8 @@ namespace GigApi.Application.Interfaces
 
         public DbSet<PlaylistSong> PlaylistSongs { get; set; }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

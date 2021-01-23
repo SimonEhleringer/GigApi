@@ -32,6 +32,11 @@ namespace GigApi.Persistence
                 .HasOne(p => p.Song)
                 .WithMany(p => p.PlaylistSongs)
                 .HasForeignKey(p => p.SongId);
+
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.RefreshTokens)
+                .HasForeignKey(x => x.UserId);
         }
 
         public DbSet<Playlist> Playlists { get; set; }
@@ -39,5 +44,7 @@ namespace GigApi.Persistence
         public DbSet<Song> Songs { get; set; }
 
         public DbSet<PlaylistSong> PlaylistSongs { get; set; }
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

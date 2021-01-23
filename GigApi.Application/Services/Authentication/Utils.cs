@@ -13,7 +13,7 @@ namespace GigApi.Application.Services.Authentication
 {
     public static class Utils
     {
-        public static string GetJwtToken(this GigUser user, IJwtSettings jwtSettings)
+        public static async Task<AuthenticationResult> GetAuthenticationResultAsync(this GigUser user, AuthenticationResult preparedResult, IJwtSettings jwtSettings, IGigDbContext context)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
@@ -26,13 +26,56 @@ namespace GigApi.Application.Services.Authentication
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim("id", user.Id)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.Add(jwtSettings.TokenLifeTime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var jwtToken = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(jwtToken);
+            var refreshToken = new RefreshToken
+            {
+                JwtId = jwtToken.Id,
+                UserId = user.Id,
+                CreationTime = DateTime.UtcNow,
+                ExpiryTime = DateTime.UtcNow.AddMonths(6)
+            };
+
+            await context.RefreshTokens.AddAsync(refreshToken);
+            await context.SaveChangesAsync();
+
+            preparedResult.Succeeded = true;
+            preparedResult.JwtToken = tokenHandler.WriteToken(jwtToken);
+            preparedResult.RefreshToken = refreshToken.Token.ToString();
+
+            return preparedResult;
+        }
+
+        public static ClaimsPrincipal GetPrincipalFromJwtToken(string jwtToken, TokenValidationParameters tokenValidationParameters)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = jwtTokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out var validatedJwtToken);
+
+                if (!IsJwtWithValidSecurityAlgorithm(validatedJwtToken))
+                {
+                    return null;
+                }
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedJwtToken)
+        {
+            return (validatedJwtToken is JwtSecurityToken jwtSecurityToken) &&
+                jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

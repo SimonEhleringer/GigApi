@@ -9,5 +9,6 @@ namespace GigApi.Domain.Entities
 {
     public class GigUser : IdentityUser
     {
+        public IList<RefreshToken> RefreshTokens { get; set; }
     }
 }

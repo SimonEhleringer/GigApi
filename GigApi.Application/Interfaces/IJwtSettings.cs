@@ -9,5 +9,7 @@ namespace GigApi.Application.Interfaces
     public interface IJwtSettings
     {
         public string Secret { get; set; }
+
+        public TimeSpan TokenLifeTime { get; set; }
     }
 }
