@@ -24,6 +24,8 @@ using GigApi.Application.Interfaces;
 using GigApi.Application.Services.Authentication;
 using AutoMapper;
 using GigApi.Application.Services.Songs;
+using FluentValidation.AspNetCore;
+using GigApi.Api.Filters;
 
 namespace GigApi.Api
 {
@@ -39,28 +41,44 @@ namespace GigApi.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Disable default ModelState filter, Instead use custom validation filter
+            services.Configure<ApiBehaviorOptions>(options =>
+                options.SuppressModelStateInvalidFilter = true);
 
-            services.AddControllers();
+            services
+                .AddControllers(options =>
+                {
+                    // Add custom validation filter
+                    options.Filters.Add<ValidationFilter>();
 
+                    // Add filter for exception handling
+                    options.Filters.Add<ExceptionHandlingFilter>();
+                })
+                // Use FluentValidation instead of DataAnnotations for validation
+                .AddFluentValidation(x => 
+                    x.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            // Settings mapping and registration
             var jwtSettings = new JwtSettings();
             Configuration.Bind(nameof(jwtSettings), jwtSettings);
+            services.AddSingleton<IJwtSettings>(jwtSettings);
 
+            // Application services
             services.AddScoped<AuthenticationService>();
             services.AddScoped<SongService>();
 
-            services.AddSingleton<IJwtSettings>(jwtSettings);
-            //services.AddSingleton(jwtSettings);
-
+            // DbContext and Identity
             services.AddDbContext<GigDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("GigDb")));
 
             services.AddScoped<IGigDbContext>(provider => provider.GetService<GigDbContext>());
 
-            services.AddAutoMapper(typeof(Startup));
-
             services.AddIdentity<GigUser, IdentityRole>()
                 .AddEntityFrameworkStores<GigDbContext>()
                 .AddDefaultTokenProviders();
+
+            // Automapper
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddAuthentication(options =>
             {
