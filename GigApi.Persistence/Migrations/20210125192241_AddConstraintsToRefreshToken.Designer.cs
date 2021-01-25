@@ -4,14 +4,16 @@ using GigApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GigApi.Persistence.Migrations
 {
     [DbContext(typeof(GigDbContext))]
-    partial class GigDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210125192241_AddConstraintsToRefreshToken")]
+    partial class AddConstraintsToRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

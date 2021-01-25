@@ -13,16 +13,20 @@ namespace GigApi.Domain.Entities
         [Key]
         public Guid Token { get; set; }
 
+        [Required]
         public string JwtId { get; set; }
 
+        [Required]
         public DateTime CreationTime { get; set; }
 
+        [Required]
         public DateTime ExpiryTime { get; set; }
 
         public bool Used { get; set; }
 
         public bool Invalidated { get; set; }
 
+        [Required]
         public string UserId { get; set; }
 
         public GigUser User { get; set; }
