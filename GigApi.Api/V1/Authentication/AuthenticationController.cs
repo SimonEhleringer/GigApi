@@ -46,6 +46,12 @@ namespace GigApi.Api.V1.Authentication
             return ReturnResponseByAuthenticationResult(authResponse);
         }
 
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+        {
+            return NoContent();
+        }
+
         private IActionResult ReturnResponseByAuthenticationResult(AuthenticationResult authenticationResult)
         {
             if (!authenticationResult.Succeeded)

@@ -173,5 +173,10 @@ namespace GigApi.Application.Services.Authentication
 
             return await user.GetAuthenticationResultAsync(result, _jwtSettings, _context);
         }
+
+        public async Task LogoutAsync(string RefreshToken)
+        {
+            
+        }
     }
 }
