@@ -77,5 +77,21 @@ namespace GigApi.Application.Services.Authentication
                 jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                     StringComparison.InvariantCultureIgnoreCase);
         }
+
+        public static bool IsRefreshTokenValid(RefreshToken storedRefreshToken, ClaimsPrincipal validatedJwtToken)
+        {
+            var jti = validatedJwtToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+
+            if (storedRefreshToken == null
+                || DateTime.UtcNow > storedRefreshToken.ExpiryTime
+                || storedRefreshToken.Invalidated
+                || storedRefreshToken.Used
+                || storedRefreshToken.JwtId != jti)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

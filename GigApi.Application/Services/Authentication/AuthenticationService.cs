@@ -135,33 +135,39 @@ namespace GigApi.Application.Services.Authentication
 
             var storedRefreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x => x.Token.ToString() == refreshToken);
 
-            if (storedRefreshToken == null)
-            {
-                result.Errors.Add("Dieses Refresh-Token existiert nicht.");
-                return result;
-            }
+            //if (storedRefreshToken == null)
+            //{
+            //    result.Errors.Add("Dieses Refresh-Token existiert nicht.");
+            //    return result;
+            //}
 
-            if (DateTime.UtcNow > storedRefreshToken.ExpiryTime)
-            {
-                result.Errors.Add("Dieses Refresh-Token ist abgelaufen.");
-                return result;
-            }
+            //if (DateTime.UtcNow > storedRefreshToken.ExpiryTime)
+            //{
+            //    result.Errors.Add("Dieses Refresh-Token ist abgelaufen.");
+            //    return result;
+            //}
 
-            if (storedRefreshToken.Invalidated)
-            {
-                result.Errors.Add("Dieses Refresh-Token wurde deaktiviert.");
-                return result;
-            }
+            //if (storedRefreshToken.Invalidated)
+            //{
+            //    result.Errors.Add("Dieses Refresh-Token wurde deaktiviert.");
+            //    return result;
+            //}
 
-            if (storedRefreshToken.Used)
-            {
-                result.Errors.Add("Dieses Refresh-Token wurde benutzt.");
-                return result;
-            }
+            //if (storedRefreshToken.Used)
+            //{
+            //    result.Errors.Add("Dieses Refresh-Token wurde benutzt.");
+            //    return result;
+            //}
 
-            if (storedRefreshToken.JwtId != jti)
+            //if (storedRefreshToken.JwtId != jti)
+            //{
+            //    result.Errors.Add("Dieses Refresh-Token passt nicht zum Jwt-Token.");
+            //    return result;
+            //}
+
+            if (!Utils.IsRefreshTokenValid(storedRefreshToken, validatedJwtToken))
             {
-                result.Errors.Add("Dieses Refresh-Token passt nicht zum Jwt-Token");
+                result.Errors.Add("Refresh-Token ist nicht valide.");
                 return result;
             }
 
@@ -174,9 +180,38 @@ namespace GigApi.Application.Services.Authentication
             return await user.GetAuthenticationResultAsync(result, _jwtSettings, _context);
         }
 
-        public async Task LogoutAsync(string RefreshToken)
+        public async Task<AuthenticationResult> LogoutAsync(string jwtToken, string refreshToken)
         {
-            
+            var result = new AuthenticationResult
+            {
+                Succeeded = false,
+                Errors = new List<string>(),
+                JwtToken = String.Empty,
+                RefreshToken = String.Empty
+            };
+
+            var validatedJwtToken = Utils.GetPrincipalFromJwtToken(jwtToken, _tokenValidationParameters);
+
+            if (validatedJwtToken == null)
+            {
+                result.Errors.Add("Jwt-Token ist nicht valide.");
+                return result;
+            }
+
+            var storedRefreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x => x.Token.ToString() == refreshToken);
+
+            if (!Utils.IsRefreshTokenValid(storedRefreshToken, validatedJwtToken))
+            {
+                result.Errors.Add("Refresh-Token ist nicht valide.");
+                return result;
+            }
+
+            storedRefreshToken.Invalidated = true;
+            _context.RefreshTokens.Update(storedRefreshToken);
+            await _context.SaveChangesAsync();
+
+            result.Succeeded = true;
+            return result;
         }
     }
 }

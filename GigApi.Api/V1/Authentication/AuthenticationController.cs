@@ -39,7 +39,7 @@ namespace GigApi.Api.V1.Authentication
         }
 
         [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
+        public async Task<IActionResult> Refresh([FromBody] RefreshLogoutRequest request)
         {
             var authResponse = await _authenticationService.RefreshJwtTokenAsync(request.JwtToken, request.RefreshToken);
 
@@ -47,8 +47,15 @@ namespace GigApi.Api.V1.Authentication
         }
 
         [HttpPost("Logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+        public async Task<IActionResult> Logout([FromBody] RefreshLogoutRequest request)
         {
+            var authResponse = await _authenticationService.LogoutAsync(request.JwtToken, request.RefreshToken);
+            
+            if (!authResponse.Succeeded)
+            {
+                return BadRequest(_mapper.Map<ErrorResponse>(authResponse));
+            }
+
             return NoContent();
         }
 
