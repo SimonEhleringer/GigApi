@@ -18,5 +18,8 @@ namespace GigApi.Api.V1.Songs
         [Required(ErrorMessage = "Es wurde kein Song Temp übermittelt.")]
         [Range(1, 999, ErrorMessage = "Das Tempo darf nur zwischen 1 und 999 BPM sein.")]
         public int Tempo { get; set; }
+
+        [MaxLength(256, ErrorMessage = "Die Notizen dürfen höchstens 256 Zeichen lang sein.")]
+        public string Notes { get; set; }
     }
 }

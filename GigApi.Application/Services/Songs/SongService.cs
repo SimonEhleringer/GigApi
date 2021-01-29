@@ -66,6 +66,7 @@ namespace GigApi.Application.Services.Songs
             songToBeUpdated.Title = songToUpdate.Title;
             songToBeUpdated.Interpreter = songToUpdate.Interpreter;
             songToBeUpdated.Tempo = songToUpdate.Tempo;
+            songToBeUpdated.Notes = songToUpdate.Notes;
 
             var updatedSong = _context.Songs.Update(songToBeUpdated);
             await _context.SaveChangesAsync();

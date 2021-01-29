@@ -14,5 +14,7 @@ namespace GigApi.Api.V1.Songs
         public string Interpreter { get; set; }
 
         public int Tempo { get; set; }
+
+        public string Notes { get; set; }
     }
 }

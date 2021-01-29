@@ -22,6 +22,9 @@ namespace GigApi.Domain.Entities
         [Range(1, 999)]
         public int Tempo { get; set; }
 
+        [MaxLength(256)]
+        public string Notes { get; set; }
+
         public IList<PlaylistSong> PlaylistSongs { get; set; }
 
         [Required]
