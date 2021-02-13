@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GigApi.Api.V1.Playlists;
 using GigApi.Api.V1.Songs;
 using GigApi.Domain.Entities;
 using System;
@@ -13,6 +14,15 @@ namespace GigApi.Api.Mapping
         public RequestToDomain()
         {
             CreateMap<CreateUpdateSongRequest, Song>();
+
+            CreateMap<CreateUpdatePlaylistRequest, Playlist>()
+                .ForMember(x => x.PlaylistSongs, map => map.MapFrom(source => 
+                    source.SongIds.ToList().Select((x, index) => 
+                        new PlaylistSong
+                        {
+                            SongId = x,
+                            IndexInPlaylist = index
+                        })));
         }
     }
 }

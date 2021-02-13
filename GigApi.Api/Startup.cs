@@ -25,6 +25,7 @@ using GigApi.Application.Services.Authentication;
 using AutoMapper;
 using GigApi.Application.Services.Songs;
 using GigApi.Api.Filters;
+using GigApi.Application.Services.Playlists;
 
 namespace GigApi.Api
 {
@@ -62,6 +63,7 @@ namespace GigApi.Api
             // Application services
             services.AddScoped<AuthenticationService>();
             services.AddScoped<SongService>();
+            services.AddScoped<PlaylistService>();
 
             // DbContext and Identity
             services.AddDbContext<GigDbContext>(options =>

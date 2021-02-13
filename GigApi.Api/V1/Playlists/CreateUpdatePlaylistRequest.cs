@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace GigApi.Api.V1.Playlists
 {
-    public class CreatePlaylistRequest
+    public class CreateUpdatePlaylistRequest
     {
         public string Name { get; set; }
 
-        public IList<int> SongIds { get; set; }
+        public IList<Guid> SongIds { get; set; }
     }
 }

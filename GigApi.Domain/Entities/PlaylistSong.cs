@@ -17,6 +17,7 @@ namespace GigApi.Domain.Entities
 
         public Song Song { get; set; }
 
+        [Required]
         public int IndexInPlaylist { get; set; }
     }
 }
