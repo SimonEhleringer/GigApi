@@ -33,5 +33,12 @@ namespace GigApi.Application.Services.Playlists
                 }
             }
         }
+
+        public static void OrderPlaylistSongs(this Playlist playlist)
+        {
+            playlist.PlaylistSongs = playlist.PlaylistSongs
+                    .OrderBy(x => x.IndexInPlaylist)
+                    .ToList();
+        }
     }
 }

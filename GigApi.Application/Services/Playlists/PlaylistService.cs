@@ -21,11 +21,26 @@ namespace GigApi.Application.Services.Playlists
 
         public async Task<IList<Playlist>> GetAllAsync(Guid loggedInUserId)
         {
-            return await _context.Playlists
+            var playlists = await _context.Playlists
                 .Where(x => x.UserId == loggedInUserId)
                 .Include(x => x.PlaylistSongs)
                 .ThenInclude(x => x.Song)
+                .OrderBy(x => x.Name)
                 .ToListAsync();
+
+            //for (int i = 0; i < playlists.Count; i++)
+            //{
+            //    playlists[i].PlaylistSongs = playlists[i].PlaylistSongs
+            //        .OrderByDescending(x => x.IndexInPlaylist)
+            //        .ToList();
+            //}
+
+            foreach (var playlist in playlists)
+            {
+                playlist.OrderPlaylistSongs();
+            }
+
+            return playlists;
         }
 
         public async Task<Playlist> GetByIdAsync(Guid playlistId, Guid loggedInUserId)
@@ -44,6 +59,8 @@ namespace GigApi.Application.Services.Playlists
             {
                 throw new UserHasNoPermissionException();
             }
+
+            playlist.OrderPlaylistSongs();
 
             return playlist;
         }

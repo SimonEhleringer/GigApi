@@ -24,6 +24,10 @@ namespace GigApi.Application.Services.Songs
         {
             return await _context.Songs
                 .Where(x => x.UserId == loggedInUserId)
+                .OrderBy(x => x.Title)
+                .ThenBy(x => x.Interpreter)
+                .ThenBy(x => x.Tempo)
+                .ThenBy(x => x.Notes)
                 .ToListAsync();
         }
 
