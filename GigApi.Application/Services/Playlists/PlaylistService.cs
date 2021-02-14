@@ -35,6 +35,11 @@ namespace GigApi.Application.Services.Playlists
                 .ThenInclude(x => x.Song)
                 .SingleOrDefaultAsync(x => x.PlaylistId == playlistId);
 
+            if (playlist == null)
+            {
+                return null;
+            }
+
             if (playlist.UserId != loggedInUserId)
             {
                 throw new UserHasNoPermissionException();
@@ -45,20 +50,6 @@ namespace GigApi.Application.Services.Playlists
 
         public async Task<Playlist> CreateAsync(Playlist playlistToCreate, Guid loggedInUserId)
         {
-            //// Retrieve Songs for join table
-            //playlistToCreate.PlaylistSongs.ToList()
-            //    .ConvertAll(x => 
-            //    x.Song = _context.Songs.FirstOrDefault(y => y.SongId == x.SongId));
-
-            //// Check if user owns all the songs
-            //foreach (var playlistSong in playlistToCreate.PlaylistSongs)
-            //{
-            //    if (playlistSong.Song.UserId != loggedInUserId)
-            //    {
-            //        throw new UserHasNoPermissionException();
-            //    }
-            //}
-
             playlistToCreate.PlaylistSongs.FillSongs(_context, loggedInUserId);
 
             playlistToCreate.UserId = loggedInUserId;
@@ -71,20 +62,7 @@ namespace GigApi.Application.Services.Playlists
 
         public async Task<Playlist> UpdateAsync(Playlist playlistToUpdate, Guid loggedInUserId)
         {
-            var playlistToBeUpdated = await _context.Playlists
-                .Include(x => x.PlaylistSongs)
-                .ThenInclude(x => x.Song)
-                .SingleOrDefaultAsync(x => x.PlaylistId == playlistToUpdate.PlaylistId);
-
-            if (playlistToBeUpdated == null)
-            {
-                return null;
-            }
-
-            if (playlistToBeUpdated.UserId != loggedInUserId)
-            {
-                throw new UserHasNoPermissionException();
-            }
+            var playlistToBeUpdated = await GetByIdAsync(playlistToUpdate.PlaylistId, loggedInUserId);
 
             playlistToUpdate.PlaylistSongs.FillSongs(_context, loggedInUserId);
 
@@ -99,7 +77,9 @@ namespace GigApi.Application.Services.Playlists
 
         public async Task<bool> DeleteAsync(Guid playlistId, Guid loggedInUserId)
         {
-            var playlistToDelete = await Utils.GetByIdWithoutTrackingAsync(_context, playlistId);
+            var playlistToDelete = await _context.Playlists
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.PlaylistId == playlistId);
 
             if (playlistToDelete == null)
             {

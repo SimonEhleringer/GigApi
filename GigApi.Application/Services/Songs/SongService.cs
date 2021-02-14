@@ -31,6 +31,11 @@ namespace GigApi.Application.Services.Songs
         {
             var song = await _context.Songs.SingleOrDefaultAsync(s => s.SongId == songId);
 
+            if (song == null)
+            {
+                return null;
+            }
+
             if (song.UserId != loggedInUserId)
             {
                 throw new UserHasNoPermissionException();

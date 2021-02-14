@@ -12,13 +12,6 @@ namespace GigApi.Application.Services.Playlists
 {
     static class Utils
     {
-        public static async Task<Playlist> GetByIdWithoutTrackingAsync(IGigDbContext context, Guid playlistId)
-        {
-            return await context.Playlists
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.PlaylistId == playlistId);
-        }
-
         public static void FillSongs(this IList<PlaylistSong> playlistSongs, IGigDbContext context, Guid loggedInUserId)
         {
             // Retrieve Songs for join table
@@ -29,6 +22,11 @@ namespace GigApi.Application.Services.Playlists
             // Check if user owns all the songs
             foreach (var playlistSong in playlistSongs)
             {
+                if (playlistSong.Song == null)
+                {
+                    throw new SongDoesNotExistException(playlistSong.SongId);
+                }
+
                 if (playlistSong.Song.UserId != loggedInUserId)
                 {
                     throw new UserHasNoPermissionException();
