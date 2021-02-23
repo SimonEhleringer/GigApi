@@ -131,7 +131,7 @@ namespace GigApi.Application.Services.Authentication
                 return result;
             }
 
-            var jti = validatedJwtToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+            //var jti = validatedJwtToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
             var storedRefreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x => x.Token.ToString() == refreshToken);
 

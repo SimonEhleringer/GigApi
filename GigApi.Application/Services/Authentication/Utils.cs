@@ -54,6 +54,9 @@ namespace GigApi.Application.Services.Authentication
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
+            // For Refreshing and Logging out the Jwt can be expired
+            tokenValidationParameters.ValidateLifetime = false;
+
             try
             {
                 var principal = jwtTokenHandler.ValidateToken(jwtToken, tokenValidationParameters, out var validatedJwtToken);
