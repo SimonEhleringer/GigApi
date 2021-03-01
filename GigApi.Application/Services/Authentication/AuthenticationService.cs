@@ -118,18 +118,18 @@ namespace GigApi.Application.Services.Authentication
                 return result;
             }
 
-            var expiryTimeUnix =
-                long.Parse(validatedJwtToken.Claims.Single(x =>
-                    x.Type == JwtRegisteredClaimNames.Exp).Value);
+            //var expiryTimeUnix =
+            //    long.Parse(validatedJwtToken.Claims.Single(x =>
+            //        x.Type == JwtRegisteredClaimNames.Exp).Value);
 
-            var expiryDateTimeUtc = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-                .AddSeconds(expiryTimeUnix);
+            //var expiryDateTimeUtc = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            //    .AddSeconds(expiryTimeUnix);
 
-            if (expiryDateTimeUtc > DateTime.UtcNow)
-            {
-                result.Errors.Add("Jwt-Token ist noch nicht abgelaufen.");
-                return result;
-            }
+            //if (expiryDateTimeUtc > DateTime.UtcNow)
+            //{
+            //    result.Errors.Add("Jwt-Token ist noch nicht abgelaufen.");
+            //    return result;
+            //}
 
             //var jti = validatedJwtToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
