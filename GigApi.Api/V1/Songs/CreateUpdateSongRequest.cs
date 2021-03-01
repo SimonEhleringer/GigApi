@@ -15,7 +15,7 @@ namespace GigApi.Api.V1.Songs
         [MaxLength(50, ErrorMessage = "Der Name des Interpreters darf höchstens 50 Zeichen lang sein.")]
         public string Interpreter { get; set; }
 
-        [Required(ErrorMessage = "Es wurde kein Song Temp übermittelt.")]
+        [Required(ErrorMessage = "Es wurde kein Song Tempo übermittelt.")]
         [Range(1, 999, ErrorMessage = "Das Tempo darf nur zwischen 1 und 999 BPM sein.")]
         public int Tempo { get; set; }
 
