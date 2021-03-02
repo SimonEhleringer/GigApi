@@ -32,6 +32,19 @@ namespace GigApi.Application.Services.Playlists
                     throw new UserHasNoPermissionException();
                 }
             }
+
+            // Find entries with same PlaylistId SongId combination
+            var duplicates = playlistSongs
+                .GroupBy(x => x.SongId)
+                .SelectMany(x => x.Skip(1))
+                .ToList();
+
+            if (duplicates.Count > 0)
+            {
+                var firstDuplicate = duplicates[0];
+
+                throw new SongMultipleTimesInPlaylistException(firstDuplicate.SongId);
+            }
         }
 
         public static void OrderPlaylistSongs(this Playlist playlist)

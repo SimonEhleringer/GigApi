@@ -81,6 +81,11 @@ namespace GigApi.Application.Services.Playlists
         {
             var playlistToBeUpdated = await GetByIdAsync(playlistToUpdate.PlaylistId, loggedInUserId);
 
+            if (playlistToBeUpdated == null)
+            {
+                return null;
+            }
+
             playlistToUpdate.PlaylistSongs.FillSongs(_context, loggedInUserId);
 
             playlistToBeUpdated.Name = playlistToUpdate.Name;
