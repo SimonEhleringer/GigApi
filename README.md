@@ -1,6 +1,6 @@
 # GiG (API)
 
-REST API for GiG (A React Native app, which bands can use to organize their gigs
+REST API for GiG (A React Native app, which bands can use to organize their gigs)
 
 ---
 
