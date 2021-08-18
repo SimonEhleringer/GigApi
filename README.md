@@ -4,7 +4,7 @@ REST API for GiG (A React Native app, which bands can use to organize their gigs
 
 ---
 
-Click [here](https://github.com/SimonEhleringer/gig-react-native-client) to go to the repository of the React Native app.
+Click [here](https://github.com/SimonEhleringer/gig-react-native-client) to go to the repository of the React Native app and a live demo.
 
 ## Features
 
